@@ -205,9 +205,7 @@ static bool read_tiles(cairo_t *cr,
   cairo_matrix_t matrix;
   cairo_get_matrix(cr, &matrix);
 
-  int64_t tile_y = region->end_tile_y - 1;
-
-  while (tile_y >= region->start_tile_y) {
+  for (int64_t tile_y = region->start_tile_y; tile_y < region->end_tile_y; ++tile_y) {
     double translate_y = ((tile_y - region->start_tile_y) *
                           grid->tile_advance_y) - region->offset_y;
     int64_t tile_x = region->end_tile_x - 1;
@@ -227,8 +225,6 @@ static bool read_tiles(cairo_t *cr,
 
       tile_x--;
     }
-
-    tile_y--;
   }
 
   return true;
