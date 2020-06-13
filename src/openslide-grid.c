@@ -205,14 +205,10 @@ static bool read_tiles(cairo_t *cr,
   cairo_matrix_t matrix;
   cairo_get_matrix(cr, &matrix);
 
-  for (int64_t tile_y = region->start_tile_y; tile_y < region->end_tile_y; ++tile_y) {
-    double translate_y = ((tile_y - region->start_tile_y) *
-                          grid->tile_advance_y) - region->offset_y;
-    int64_t tile_x = region->end_tile_x - 1;
-
-    while (tile_x >= region->start_tile_x) {
-      double translate_x = ((tile_x - region->start_tile_x) *
-                            grid->tile_advance_x) - region->offset_x;
+  for (int64_t tile_x = region->end_tile_x - 1; tile_x >= region->start_tile_x; --tile_x) {
+    for (int64_t tile_y = region->end_tile_y - 1; tile_y >= region->start_tile_y; --tile_y) {
+      double translate_x = ((tile_x - region->start_tile_x) * grid->tile_advance_x) - region->offset_x;
+      double translate_y = ((tile_y - region->start_tile_y) * grid->tile_advance_y) - region->offset_y;
       //      g_debug("read_tiles %"PRId64" %"PRId64, tile_x, tile_y);
       cairo_translate(cr, translate_x, translate_y);
       bool success = callback(grid, region, cr,
@@ -222,8 +218,6 @@ static bool read_tiles(cairo_t *cr,
       if (!success) {
         return false;
       }
-
-      tile_x--;
     }
   }
 
